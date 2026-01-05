@@ -1,23 +1,14 @@
-import { Router } from 'express';
-import { TelemetryController } from '../controllers/telemetry.controller';
-import { IngestTelemetryUseCase } from '../domain/telemetry/ingest-telemetry.usecase';
-import { PgDeviceRepository } from '../repositories/impl/device.repository.pg';
-import { PgTelemetryRepository } from '../repositories/impl/telemetry.repository.pg';
+import { Router, Request, Response } from 'express';
+import { makeTelemetryController } from '../factories/telemetry.factory';
 
 export const telemetryRouter = Router();
 
-const deviceRepository = new PgDeviceRepository();
-const telemetryRepository = new PgTelemetryRepository();
+const telemetryController = makeTelemetryController();
 
-const ingestTelemetryUseCase = new IngestTelemetryUseCase(
-  deviceRepository,
-  telemetryRepository,
-);
-
-const telemetryController = new TelemetryController(
-  ingestTelemetryUseCase,
-);
-
-telemetryRouter.post('/', (req, res) =>
+telemetryRouter.post('/', (req: Request, res: Response) =>
   telemetryController.ingest(req, res),
+);
+
+telemetryRouter.get('/:deviceId', (req: Request, res: Response) =>
+  telemetryController.getByDevice(req, res),
 );
