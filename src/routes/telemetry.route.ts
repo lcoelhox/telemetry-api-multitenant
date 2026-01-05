@@ -8,3 +8,7 @@ const telemetryController = makeTelemetryController();
 telemetryRouter.post('/', (req: Request, res: Response) =>
   telemetryController.ingest(req, res),
 );
+
+telemetryRouter.get('/:deviceId', (req: Request, res: Response) =>
+  telemetryController.getByDevice(req, res),
+);
