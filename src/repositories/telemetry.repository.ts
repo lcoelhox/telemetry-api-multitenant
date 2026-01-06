@@ -5,17 +5,21 @@ export type TelemetryPersistenceInput = {
   timestamp: string;
 };
 
+export type TelemetryReading = {
+  value: number;
+  timestamp: string;
+};
+
+export type TelemetryFindInput = {
+  tenantId: string;
+  deviceId: string;
+  limit: number;
+};
+
 export interface TelemetryRepository {
   save(input: TelemetryPersistenceInput): Promise<void>;
 
-   findLastByDevice(
-    deviceId: string,
-    tenantId: string,
-    limit: number,
-  ): Promise<
-    {
-      value: number;
-      timestamp: string;
-    }[]
-  >;
+  findLastByDevice(
+    input: { deviceId: string; tenantId: string; limit: number }
+  ): Promise<TelemetryReading[]>;
 }

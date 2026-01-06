@@ -1,16 +1,8 @@
-import { pgTable, uuid, varchar, numeric, timestamp } from 'drizzle-orm/pg-core';
-import { devices } from './devices';
+import { pgTable, varchar, doublePrecision, timestamp } from 'drizzle-orm/pg-core';
 
 export const sensorReadings = pgTable('sensor_readings', {
-  id: uuid('id').defaultRandom().primaryKey(),
-
-  tenantId: varchar('tenant_id', { length: 50 }).notNull(),
-  deviceId: uuid('device_id')
-    .notNull()
-    .references(() => devices.id),
-
-  metric: varchar('metric', { length: 50 }).notNull(),
-  value: numeric('value').notNull(),
-
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  deviceId: varchar('device_id').notNull(),
+  tenantId: varchar('tenant_id').notNull(),
+  value: doublePrecision('value').notNull(),
+  timestamp: timestamp('timestamp').notNull(),
 });
