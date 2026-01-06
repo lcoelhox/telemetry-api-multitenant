@@ -9,10 +9,10 @@ export class GetTelemetryByDeviceUseCase {
   constructor(private readonly telemetryRepository: TelemetryRepository) {}
 
   async execute({ tenantId, deviceId }: GetTelemetryInput) {
-    return this.telemetryRepository.findLastByDevice(
+    return this.telemetryRepository.findLastByDevice({
       deviceId,
       tenantId,
-      10,
-    );
+      limit: 10,
+    });
   }
 }

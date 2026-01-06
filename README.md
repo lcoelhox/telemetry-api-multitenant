@@ -74,9 +74,78 @@ Este backlog foi utilizado como base para a execução do teste, com pequenos aj
 
 ---
 
+## Instalação
+
+```bash
+git clone https://github.com/lcoelhox/telemetry-api-multitenant.git
+cd telemetry-api-multitenant
+npm install
+```
 
 ## Como Rodar o Projeto
 
 ```bash
 docker compose up --build
+```
 
+
+---
+
+
+## Endpoints da API
+
+### POST /telemetry
+
+Recebe leituras de sensores e valida se o dispositivo pertence ao tenant.
+
+**Headers:**
+
+```http
+x-tenant-id: tenant_a
+Content-Type: application/json
+```
+
+body exemplo:
+
+```bash
+{
+  "deviceId": "device-1",
+  "value": 42
+}
+```
+
+Response:
+```bash
+{
+  "status": "accepted"
+}
+```
+
+### GET /telemetry/:deviceId
+
+Retorna as últimas 10 leituras de um dispositivo para o tenant autenticado.
+
+**Headers:**
+
+```http
+x-tenant-id: tenant_a
+```
+
+response exemplo:
+
+```bash
+[
+  {
+    "value": 42,
+    "timestamp": "2026-01-05T14:56:35.268Z"
+  }
+]
+```
+
+---
+
+## Testes de integração
+
+```bash
+npm run test
+```

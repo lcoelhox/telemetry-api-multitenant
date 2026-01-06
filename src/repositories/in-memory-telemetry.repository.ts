@@ -1,17 +1,28 @@
-import { TelemetryRepository, TelemetryPersistenceInput } from './telemetry.repository';
+import {
+  TelemetryRepository,
+  TelemetryPersistenceInput,
+  TelemetryFindInput,
+  TelemetryReading,
+} from './telemetry.repository';
 
 export class InMemoryTelemetryRepository implements TelemetryRepository {
   private data: TelemetryPersistenceInput[] = [];
 
-  async save(input: TelemetryPersistenceInput) {
+  async save(input: TelemetryPersistenceInput): Promise<void> {
     this.data.push(input);
-    console.log('Telemetry saved:', input);
   }
 
-  async findLastByDevice(deviceId: string, tenantId: string, limit: number) {
-    return this.data
+  async findLastByDevice(input: TelemetryFindInput): Promise<TelemetryReading[]> {
+    const { deviceId, tenantId, limit } = input;
+
+    const filtered = this.data
       .filter(d => d.deviceId === deviceId && d.tenantId === tenantId)
-      .slice(-limit)
-      .map(d => ({ value: d.value, timestamp: d.timestamp }));
+      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+      .slice(0, limit);
+
+    return filtered.map(d => ({
+      value: d.value,
+      timestamp: d.timestamp,
+    }));
   }
 }
